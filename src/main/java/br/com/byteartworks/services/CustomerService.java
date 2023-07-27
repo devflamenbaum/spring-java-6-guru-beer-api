@@ -1,7 +1,6 @@
 package br.com.byteartworks.services;
 
 import br.com.byteartworks.dto.CustomerDTO;
-import br.com.byteartworks.model.Customer;
 
 import java.util.List;
 import java.util.Optional;

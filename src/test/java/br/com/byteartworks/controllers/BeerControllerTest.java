@@ -1,8 +1,8 @@
 package br.com.byteartworks.controllers;
 
 import br.com.byteartworks.dto.BeerDTO;
-import br.com.byteartworks.seed.BeerLoader;
 import br.com.byteartworks.services.BeerService;
+import br.com.byteartworks.services.BeerServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -46,17 +46,16 @@ class BeerControllerTest {
     @Captor
     ArgumentCaptor<BeerDTO> beerArgumentCaptor;
 
-    BeerLoader seed = new BeerLoader();
+    BeerServiceImpl beerServiceImpl;
 
     @BeforeEach
     void setUp() throws Exception {
-        seed = new BeerLoader();
-        seed.run(null);
+        beerServiceImpl = new BeerServiceImpl();
     }
 
     @Test
     void testPatchBeer() throws Exception {
-        BeerDTO testBeer = seed.getBeerMap().values().stream().toList().get(0);
+        BeerDTO testBeer = beerServiceImpl.getAllBeers().get(0);
 
         Map<String, Object> beerMap = new HashMap<>();
         beerMap.put("name", "new name");
@@ -77,7 +76,7 @@ class BeerControllerTest {
 
     @Test
     void testDeleteBeer() throws Exception {
-        BeerDTO testBeer = seed.getBeerMap().values().stream().toList().get(0);
+        BeerDTO testBeer = beerServiceImpl.getAllBeers().get(0);
 
         mockMvc.perform(delete(BeerController.BEER_PATH_ID, testBeer.getId())
                 .accept(MediaType.APPLICATION_JSON))
@@ -90,7 +89,7 @@ class BeerControllerTest {
 
     @Test
     void testUpdateBeer() throws Exception {
-        BeerDTO testBeer = seed.getBeerMap().values().stream().toList().get(0);
+        BeerDTO testBeer = beerServiceImpl.getAllBeers().get(0);
 
         mockMvc.perform(put(BeerController.BEER_PATH_ID, testBeer.getId())
                 .accept(MediaType.APPLICATION_JSON)
@@ -102,12 +101,12 @@ class BeerControllerTest {
 
     @Test
     void testCreateNewBeer() throws Exception {
-        BeerDTO testBeer = seed.getBeerMap().values().stream().toList().get(0);
+        BeerDTO testBeer = beerServiceImpl.getAllBeers().get(0);
         testBeer.setVersion(null);
         testBeer.setId(null);
 
         given(beerService.saveNewBeer(any(BeerDTO.class)))
-                .willReturn(seed.getBeerMap().values().stream().toList().get(1));
+                .willReturn(beerServiceImpl.getAllBeers().get(1));
 
         mockMvc.perform(post(BeerController.BEER_PATH)
                 .accept(MediaType.APPLICATION_JSON)
@@ -122,7 +121,7 @@ class BeerControllerTest {
     @Test
     void testListBeers() throws Exception {
 
-        given(beerService.getAllBeers()).willReturn(new ArrayList<>(seed.getBeerMap().values()));
+        given(beerService.getAllBeers()).willReturn(new ArrayList<>(beerServiceImpl.getAllBeers()));
 
         mockMvc.perform(get(BeerController.BEER_PATH)
                 .accept(MediaType.APPLICATION_JSON))
@@ -143,7 +142,7 @@ class BeerControllerTest {
     @Test
     void getBeerById() throws Exception {
 
-        BeerDTO testBeer = seed.getBeerMap().values().stream().toList().get(0);
+        BeerDTO testBeer = beerServiceImpl.getAllBeers().get(0);
 
         given(beerService.getBeerById(testBeer.getId())).willReturn(Optional.of(testBeer));
 

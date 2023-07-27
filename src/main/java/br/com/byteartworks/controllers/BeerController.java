@@ -2,15 +2,12 @@ package br.com.byteartworks.controllers;
 
 import br.com.byteartworks.dto.BeerDTO;
 import br.com.byteartworks.exceptions.NotFoundException;
-import br.com.byteartworks.model.Beer;
 import br.com.byteartworks.services.BeerService;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
