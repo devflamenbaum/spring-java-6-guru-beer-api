@@ -3,6 +3,7 @@ package br.com.byteartworks.controllers;
 import br.com.byteartworks.dto.CustomerDTO;
 import br.com.byteartworks.exceptions.NotFoundException;
 import br.com.byteartworks.services.CustomerService;
+import br.com.byteartworks.services.CustomerServiceJPA;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
