@@ -1,6 +1,8 @@
 package br.com.byteartworks.services;
 
 import br.com.byteartworks.dto.BeerDTO;
+import br.com.byteartworks.entities.Beer;
+import br.com.byteartworks.enumeration.BeerType;
 import br.com.byteartworks.mappers.BeerMapper;
 import br.com.byteartworks.repositories.BeerRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,11 +33,40 @@ public class BeerServiceJPA implements BeerService {
     }
 
     @Override
-    public List<BeerDTO> getAllBeers() {
-        return beerRepository.findAll()
+    public List<BeerDTO> getAllBeers(String beerName, BeerType beerType, Boolean showInventory) {
+
+        List<Beer> beerList;
+
+        if(StringUtils.hasText(beerName)) {
+            beerList = listBeersByName(beerName);
+        } else if(!StringUtils.hasText(beerName) && beerType != null) {
+            beerList = listBeersByType(beerType);
+        } else if(StringUtils.hasText(beerName) && beerType != null) {
+            beerList = listBeersByNameAndType(beerName, beerType);
+        } else {
+            beerList = beerRepository.findAll();
+        }
+
+        if (showInventory != null && !showInventory) {
+            beerList.forEach(beer -> beer.setQuantityOnHand(null));
+        }
+
+        return beerList
                 .stream()
                 .map(beerMapper::beerToBeerDto)
                 .collect(Collectors.toList());
+    }
+
+    private List<Beer> listBeersByNameAndType(String beerName, BeerType beerType) {
+        return beerRepository.findAllByNameIsLikeIgnoreCaseAndType("%" + beerName + "%", beerType);
+    }
+
+    private List<Beer> listBeersByType(BeerType beerType) {
+        return beerRepository.findAllByType(beerType);
+    }
+
+    public List<Beer> listBeersByName(String beerName) {
+        return beerRepository.findAllByNameIsLikeIgnoreCase("%" + beerName + "%");
     }
 
     @Override

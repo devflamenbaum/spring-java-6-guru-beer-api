@@ -1,6 +1,7 @@
 package br.com.byteartworks.services;
 
 import br.com.byteartworks.dto.BeerDTO;
+import br.com.byteartworks.enumeration.BeerType;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,7 +14,7 @@ public interface BeerService {
 
     Optional<BeerDTO> getBeerById(UUID id);
 
-    List<BeerDTO> getAllBeers();
+    List<BeerDTO> getAllBeers(String beerName, BeerType beerType, Boolean showInventory);
 
     BeerDTO saveNewBeer(BeerDTO beer);
 

@@ -1,6 +1,7 @@
 package br.com.byteartworks.controllers;
 
 import br.com.byteartworks.dto.BeerDTO;
+import br.com.byteartworks.enumeration.BeerType;
 import br.com.byteartworks.exceptions.NotFoundException;
 import br.com.byteartworks.services.BeerService;
 import lombok.RequiredArgsConstructor;
@@ -75,9 +76,12 @@ public class BeerController {
     }
 
     @GetMapping(value = BEER_PATH)
-    public List<BeerDTO> getAllBeers(){
+    public List<BeerDTO> getAllBeers(
+            @RequestParam(required = false) String beerName,
+            @RequestParam(required = false) BeerType beerStyle,
+            @RequestParam(required = false) Boolean showInventory){
 
-        return beerService.getAllBeers();
+        return beerService.getAllBeers(beerName, beerStyle, showInventory);
 
     }
 
