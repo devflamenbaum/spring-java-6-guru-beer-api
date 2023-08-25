@@ -2,6 +2,7 @@ package br.com.byteartworks.repositories;
 
 import br.com.byteartworks.entities.Beer;
 import br.com.byteartworks.entities.BeerOrder;
+import br.com.byteartworks.entities.BeerOrderShipment;
 import br.com.byteartworks.entities.Customer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -42,6 +43,9 @@ class BeerOrderRepositoryTest {
         BeerOrder beerOrder = BeerOrder.builder()
                 .customerRef("Test customer")
                 .customer(testCustomer)
+                .beerOrderShipment(BeerOrderShipment.builder()
+                        .trackingNumber("1235r")
+                        .build())
                 .build();
 
         BeerOrder savedBeerOrder = beerOrderRepository.save(beerOrder);
