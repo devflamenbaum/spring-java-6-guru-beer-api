@@ -2,8 +2,8 @@ package br.com.byteartworks.services;
 
 import br.com.byteartworks.dto.BeerDTO;
 import br.com.byteartworks.enumeration.BeerType;
+import org.springframework.data.domain.Page;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -14,7 +14,7 @@ public interface BeerService {
 
     Optional<BeerDTO> getBeerById(UUID id);
 
-    List<BeerDTO> getAllBeers(String beerName, BeerType beerType, Boolean showInventory);
+    Page<BeerDTO> getAllBeers(String beerName, BeerType beerType, Boolean showInventory, Integer pageNumber, Integer pageSize);
 
     BeerDTO saveNewBeer(BeerDTO beer);
 

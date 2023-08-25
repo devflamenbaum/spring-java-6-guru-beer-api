@@ -6,13 +6,13 @@ import br.com.byteartworks.exceptions.NotFoundException;
 import br.com.byteartworks.services.BeerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 /*
@@ -76,12 +76,14 @@ public class BeerController {
     }
 
     @GetMapping(value = BEER_PATH)
-    public List<BeerDTO> getAllBeers(
+    public Page<BeerDTO> getAllBeers(
             @RequestParam(required = false) String beerName,
             @RequestParam(required = false) BeerType beerStyle,
-            @RequestParam(required = false) Boolean showInventory){
+            @RequestParam(required = false) Boolean showInventory,
+            @RequestParam(required = false) Integer pageNumber,
+            @RequestParam(required = false) Integer pageSize){
 
-        return beerService.getAllBeers(beerName, beerStyle, showInventory);
+        return beerService.getAllBeers(beerName, beerStyle, showInventory, pageNumber, pageSize);
 
     }
 
