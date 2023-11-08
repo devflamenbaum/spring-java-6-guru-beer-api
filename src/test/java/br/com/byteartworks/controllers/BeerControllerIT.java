@@ -187,7 +187,7 @@ class BeerControllerIT {
     void testNoAuth() throws Exception {
         //Test No Auth
         mockMvc.perform(get(BeerController.BEER_PATH)
-                        .queryParam("beerStyle", BeerStyle.IPA.name())
+                        .queryParam("beerStyle", BeerType.IPA.name())
                         .queryParam("pageSize", "800"))
                 .andExpect(status().isUnauthorized());
 

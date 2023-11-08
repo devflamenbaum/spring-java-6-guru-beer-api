@@ -14,10 +14,12 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 
+import java.time.Instant;
 import java.util.*;
 
 import static org.hamcrest.core.Is.is;
@@ -27,6 +29,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.httpBasic;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.jwt;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -57,6 +60,16 @@ class BeerControllerTest {
     public static final String USERNAME = "user1";
     public static final String PASSWORD = "password";
 
+    public static final SecurityMockMvcRequestPostProcessors.JwtRequestPostProcessor jwtRequestPostProcessor =
+            jwt().jwt(jwt -> {
+                jwt.claims(claims -> {
+                            claims.put("scope", "message-read");
+                            claims.put("scope", "message-write");
+                        })
+                        .subject("messaging-client")
+                        .notBefore(Instant.now().minusSeconds(51));
+            });
+
     @BeforeEach
     void setUp() throws Exception {
         beerServiceImpl = new BeerServiceImpl();
@@ -70,7 +83,8 @@ class BeerControllerTest {
         beerMap.put("name", "new name");
 
         mockMvc.perform(patch(BeerController.BEER_PATH_ID, testBeer.getId())
-                        .with(httpBasic(USERNAME, PASSWORD))
+                        //.with(httpBasic(USERNAME, PASSWORD))
+                        .with(jwtRequestPostProcessor)
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(beerMap)))
